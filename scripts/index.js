@@ -8,6 +8,7 @@ function createCard(cardData, deleteCard) {
   // DOM узлы
   cardElement.querySelector(".card__image").src = cardData.link;
   cardElement.querySelector(".card__title").textContent = cardData.name;
+  cardElement.querySelector(".card__image").alt = cardData.name;
   // колбэк удаления карточки
   cardElement
     .querySelector(".card__delete-button")
