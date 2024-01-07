@@ -1,13 +1,8 @@
 export let closeModal;
 export let openModal;
+export let closeEsc;
 
-
-/* openModal = (popup) => {
-    popup.classList.toggle('popup_is-opened');
-    popup.classList.toggle('popup_is-animated');
-    document.addEventListener('keydown', closeEsc);
-} */
-
+// открытие попапа
 openModal = (popup) => {
     if (!popup.classList.contains('popup_is-opened')) {
         popup.classList.add('popup_is-animated');
@@ -18,7 +13,6 @@ openModal = (popup) => {
 }
 
 //закрытие попапа
-
 closeModal = (closePopup) => { 
     closePopup.classList.add("popup_closed");
     closePopup.classList.remove("popup_is-opened");
@@ -26,8 +20,7 @@ closeModal = (closePopup) => {
 }
 
 // закрытие по esc
-
-export let closeEsc = (evt) => {
+closeEsc = (evt) => {
 if (evt.key === "Escape") {
     closeModal(document.querySelector('.popup_is-opened'));
 }
