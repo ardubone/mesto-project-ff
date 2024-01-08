@@ -1,131 +1,116 @@
 import './pages/index.css'; // импорт главного файла стилей
 import avatar from './images/avatar.jpg';
 import {closeModal, openModal} from './scripts/modal.js'; //импорт функции открытия и закрытия попапа
-import {initialCards, createCard, deleteCard, likeCard} from './scripts/cards.js'; // импорт функций карточки
+import {initialCards} from './scripts/cards.js'; // импорт карточек
+import {createCard, deleteCard, likeCard} from './scripts/card.js'; // импорт функций карточки
 
+// Все элементы в DOM
+const profileImage = document.querySelector('.profile__image'); // Изображение профиля
+const editButton = document.querySelector('.profile__edit-button'); // Кнопка редактирования
+const editPopup = document.querySelector('.popup_type_edit'); // Попап редактирования профиля
+const placesList = document.querySelector(".places__list"); // список карточек
+const addButton = document.querySelector('.profile__add-button'); // Кнопка добавления карточки
+const addPopup = document.querySelector('.popup_type_new-card'); // Попап добавления карточки
+const closeButtons = document.querySelectorAll('.popup__close'); //находим все закрыть
 
-// Изображение профиля
-const profileImage = document.querySelector('.profile__image');
+const formEdit = document.forms.edit_profile; // форма в DOM
+const title = formEdit.elements.name; //инпут имени
+const description = formEdit.elements.description; //инпут работы
+
+const popups = document.querySelectorAll('.popup'); //находим все попапы
+
+const profileTitle = document.querySelector('.profile__title'); // имя в DOM
+const profileDescription = document.querySelector('.profile__description'); // работа в DOM
+
+const formPlace = document.forms.new_place; // форма добавдения карточки
+const place = formPlace.elements.place_name; // инпут с названием
+const link = formPlace.elements.link; // инпут со ссылкой
+
+const popupImage = document.querySelector('.popup_type_image'); // попап с изображением
+const srcImage = popupImage.querySelector('.popup__image'); // изображение
+const captionImage = popupImage.querySelector('.popup__caption'); //описание изображения
+
+// установка изображения профиля
 profileImage.style.backgroundImage = `url('${avatar}')`;
 
-// Темплейт карточки
-export const cardTemplate = document.querySelector("#card-template").content;
-// dom списка карточек
-const placesList = document.querySelector(".places__list");
-
-// Вывести карточки на страницу
+// Вывести дефолтные карточки на страницу
 initialCards.forEach((cardData) => {
   placesList.append(createCard(cardData, deleteCard, likeCard, openCard));
 });
 
+//Открытие карточки
+  function openCard(cardData){
+    // присваиваем значения попапу из value в карточке
+      srcImage.src = cardData.link;
+      srcImage.alt = cardData.name;
+      captionImage.textContent = cardData.name;
+      openModal(popupImage);
+    } 
+
+// заполнение формы значениями из DOM
+function fillPopupEdit() {
+  title.value = profileTitle.textContent;
+  description.value = profileDescription.textContent;
+  return title.value, description.value;
+} 
+
 // Нажатие на редактирование профиля
-const editButton = document.querySelector('.profile__edit-button');
-const editPopup = document.querySelector('.popup_type_edit');
 editButton.addEventListener('click', () => {
   openModal(editPopup);
+  fillPopupEdit();
 });
 
 // Нажатие на кнопку добавления карточки
-const addButton = document.querySelector('.profile__add-button');
-const addPopup = document.querySelector('.popup_type_new-card');
 addButton.addEventListener('click', () => {
   openModal(addPopup);
 })
 
-// функция открытия карточки - на вход берет карточку
-function openCard(cardData) {
-
-  const cardImages = document.querySelectorAll('.card__image'); // все изображения
-  const popupImage = document.querySelector('.popup_type_image'); // попап с изображением
-// присваиваем значения попапу из value в карточке
-  popupImage.querySelector('.popup__image').src = cardData.link;
-  popupImage.querySelector('.popup__image').alt = cardData.name;
-  popupImage.querySelector('.popup__caption').textContent = cardData.name;
-// лисенер для каждой карточки из всех
-  cardImages.forEach((cardImage) => {
-    cardImage
-      .addEventListener('click', () => {
-      openModal(popupImage);
-    });
-  }); 
-} 
-
 // Закрытие попапа
-const closeButtons = document.querySelectorAll('.popup__close'); //находим все закрыть
 // для каждой объявляем обработчик
 closeButtons.forEach((closeButton) => {
   closeButton
     .addEventListener('click', () => {
-      closeModal(document.querySelector('.popup_is-opened'));
-      formElement.reset();//сброс формы
-    }
+      const openedPopup = closeButton.closest('.popup_is-opened'); //только если попап открыт
+      if (openedPopup) {
+      closeModal(openedPopup);
+    }}
   )
 });
 
 // закрытие по overlay
-const overlay = document.querySelector('.page__content'); // объявляем весь пейдж контент оверлеем
-// нажатие на область вне попапа закрытие
-overlay.addEventListener('click', (popup) => {
-  if (popup.target.classList.contains('popup_is-opened')) {
-      closeModal(document.querySelector('.popup_is-opened'))
-    }}
-)
+// для каждого попапа из всех объявляем обработчик
+popups.forEach(popup => {
+  popup.addEventListener('click', (event) => {
+    if (event.target === popup) {
+      closeModal(popup);
+    }
+  });
+});
 
 // Работа с формой редактирования
-// форма в DOM
-const formElement = document.forms.edit_profile;
-// поля формы в DOM
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-// переменные для ввода
-let nameInput = document.querySelector('.popup__input_type_name');
-let jobInput = document.querySelector('.popup__input_type_description');
+function handleFormEditSubmit(evt) {
+    evt.preventDefault(); // отменяем стандартную отправку формы.
+      // передаем значения в профиль
+    profileTitle.textContent = title.value;
+    profileDescription.textContent = description.value;
+    closeModal(editPopup); // закрытие окна
+} 
 
-// заполнение формы значениями из DOM
-nameInput.value = profileTitle.textContent;
-jobInput.value = profileDescription.textContent;
-
-// Обработчик «отправки» формы
-function handleFormSubmit(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-    // Получите значение полей jobInput и nameInput из свойства value
-    const title = formElement.elements.name;
-    const description = formElement.elements.description;
-    nameInput = title.value;
-    jobInput = description.value;
-    // новые значения
-    profileTitle.textContent = nameInput;
-    profileDescription.textContent = jobInput;
-// закрытие окна
-    closeModal(document.querySelector('.popup_is-opened'))
-}
-
-// Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
-formElement.addEventListener('submit', handleFormSubmit);
+// Прикрепляем обработчик к форме профиля на сабмит:
+formEdit.addEventListener('submit', handleFormEditSubmit);
 
 // Работа с формой добавления карточки
-// форма в DOM
-const formPlace = document.forms.new_place;
 function handleFormSubmitPlace(evt) {
-    evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-    //  значение полей
-    const place = formPlace.elements.place_name;
-    const link = formPlace.elements.link;
-    // элементы, куда должны быть вставлены значения полей
+    evt.preventDefault(); // отменяем стандартную отправку формы.
+    // передаем значения в карточку
     const newData = {
         name: place.value,
         link: link.value
     };
-    
-    // добавляем карточку в начало списка
-    placesList.prepend(createCard(newData, deleteCard, likeCard, openCard));
+    placesList.prepend(createCard(newData, deleteCard, likeCard, openCard)); // добавляем карточку в начало списка
     formPlace.reset(); // сбросить форму
-    closeModal(document.querySelector('.popup_is-opened')) // закрытие окна
+    closeModal(addPopup) // закрытие окна
 }
 
-// Прикрепляем обработчик к форме:
-// он будет следить за событием “submit” - «отправка»
+// Прикрепляем обработчик к форме дообавления карточки на сабмит:
 formPlace.addEventListener('submit', handleFormSubmitPlace);
-
-

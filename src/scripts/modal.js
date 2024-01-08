@@ -1,27 +1,25 @@
-export let closeModal;
-export let openModal;
-export let closeEsc;
-
 // открытие попапа
-openModal = (popup) => {
-    if (!popup.classList.contains('popup_is-opened')) {
+export const openModal = (popup) => {
+    // проверяем на наличие анимации, если нет то добавляем
+    if (!popup.classList.contains('popup_is-animated')) {
         popup.classList.add('popup_is-animated');
-        popup.classList.add('popup_is-opened');
-        popup.classList.remove('popup_closed');
-    }
+    };
+//проверка на открытие
+    if (!popup.classList.contains('popup_is-opened')) {
+        popup.classList.toggle('popup_is-opened');
+    };
+    // лисенер на esc
     document.addEventListener('keydown', closeEsc);
 }
 
 //закрытие попапа
-closeModal = (closePopup) => { 
-    closePopup.classList.add("popup_closed");
-    closePopup.classList.remove("popup_is-opened");
+export const closeModal = (closePopup) => { 
+    closePopup.classList.toggle("popup_is-opened");
     document.removeEventListener('keydown', closeEsc);
 }
 
 // закрытие по esc
-closeEsc = (evt) => {
+export const closeEsc = (evt) => {
 if (evt.key === "Escape") {
     closeModal(document.querySelector('.popup_is-opened'));
-}
-    }
+}}
