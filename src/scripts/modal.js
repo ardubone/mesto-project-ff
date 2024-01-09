@@ -1,9 +1,5 @@
 // открытие попапа
 export const openModal = (popup) => {
-    // проверяем на наличие анимации, если нет то добавляем
-    if (!popup.classList.contains('popup_is-animated')) {
-        popup.classList.add('popup_is-animated');
-    };
 //проверка на открытие
     if (!popup.classList.contains('popup_is-opened')) {
         popup.classList.toggle('popup_is-opened');

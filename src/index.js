@@ -38,6 +38,13 @@ initialCards.forEach((cardData) => {
   placesList.append(createCard(cardData, deleteCard, likeCard, openCard));
 });
 
+// Анимация попапов
+popups.forEach(popup => {
+    if (!popup.classList.contains('popup_is-animated')) {
+      popup.classList.add('popup_is-animated');
+    }
+  });
+
 //Открытие карточки
   function openCard(cardData){
     // присваиваем значения попапу из value в карточке
@@ -51,7 +58,6 @@ initialCards.forEach((cardData) => {
 function fillPopupEdit() {
   title.value = profileTitle.textContent;
   description.value = profileDescription.textContent;
-  return title.value, description.value;
 } 
 
 // Нажатие на редактирование профиля
@@ -67,15 +73,11 @@ addButton.addEventListener('click', () => {
 
 // Закрытие попапа
 // для каждой объявляем обработчик
-closeButtons.forEach((closeButton) => {
-  closeButton
-    .addEventListener('click', () => {
-      const openedPopup = closeButton.closest('.popup_is-opened'); //только если попап открыт
-      if (openedPopup) {
-      closeModal(openedPopup);
-    }}
-  )
-});
+closeButtons.forEach(closeButton => {
+  const popup = closeButton.closest('.popup'); // нашли родителя с нужным классом
+  closeButton.addEventListener('click', () => closeModal(popup)); // закрыли попап
+}); 
+
 
 // закрытие по overlay
 // для каждого попапа из всех объявляем обработчик
