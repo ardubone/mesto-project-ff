@@ -1,11 +1,15 @@
+import { clearValidation } from './validation.js';
+
 // открытие попапа
 export const openModal = (popup) => {
 //проверка на открытие
     if (!popup.classList.contains('popup_is-opened')) {
         popup.classList.toggle('popup_is-opened');
     };
+
     // лисенер на esc
     document.addEventListener('keydown', closeEsc);
+    clearValidation(popup);
 }
 
 //закрытие попапа

@@ -3,6 +3,7 @@ import avatar from './images/avatar.jpg';
 import {closeModal, openModal} from './scripts/modal.js'; //импорт функции открытия и закрытия попапа
 import {initialCards} from './scripts/cards.js'; // импорт карточек
 import {createCard, deleteCard, likeCard} from './scripts/card.js'; // импорт функций карточки
+import {enableValidation} from './scripts/validation.js';
 
 // Все элементы в DOM
 const profileImage = document.querySelector('.profile__image'); // Изображение профиля
@@ -116,3 +117,5 @@ function handleFormSubmitPlace(evt) {
 
 // Прикрепляем обработчик к форме дообавления карточки на сабмит:
 formPlace.addEventListener('submit', handleFormSubmitPlace);
+
+enableValidation()
