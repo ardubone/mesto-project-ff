@@ -1,3 +1,5 @@
+import {deleteCardApi} from "./api.js";
+import { userToken, cardsUrl} from "../index.js";
 // Функция создания карточки
 export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     // Темплейт карточки
@@ -14,6 +16,7 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     cardTitle.textContent = cardData.name;
     cardImage.alt = cardData.name;
     cardLikes.textContent = Object.keys(cardData.likes).length;
+    cardImage.dataset.id = cardData._id;
     // колбэк удаления карточки
     cardDeleteButton
         .addEventListener("click", () => {
@@ -24,6 +27,7 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     cardLikeButton
         .addEventListener("click", () => {
         likeCard(cardData);
+
     });
 
   // колбэк открытия карточки
@@ -39,9 +43,17 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
   // Функция удаления карточки
 export const deleteCard = (cardData) => {
     cardData.element.remove();
+    //deleteCardApi(cardsUrl, userToken, cardData._id);
+
   }
 
   // Функция like карточки
 export const likeCard = (cardData) => {
     cardData.element.querySelector(".card__like-button").classList.toggle("card__like-button_is-active");
+  }
+
+export const hideDeleteButton = (userData, cardData, newCard) => {
+    if (userData._id !== cardData.owner._id) {
+      newCard.querySelector('.card__delete-button').remove();
+    }
   }

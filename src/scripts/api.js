@@ -1,4 +1,5 @@
 import { fillData } from "../index.js";
+
 // гетаем карточки
 export function getUserInfo(url, token) {
   return fetch(url, {
@@ -71,6 +72,24 @@ export function postCard(url, token, name, link) {
   })
     .then((res) => res.json())
     .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    });
+}
+
+// удаление карточки
+export function deleteCardApi(url, token, id) {
+  return fetch(`${url}/${id}`, {
+    method: "DELETE",
+    headers: {
+      authorization: token,
+    },
+  })
+    .then((res) => res.json())
+    .then((result) => {
+        console.log(result)
       return result;
     })
     .catch((err) => {

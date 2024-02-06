@@ -2,7 +2,7 @@ import './pages/index.css'; // импорт главного файла стил
 //import avatar from './images/avatar.jpg';
 import {closeModal, openModal} from './scripts/modal.js'; //импорт функции открытия и закрытия попапа
 //import {initialCards} from './scripts/cards.js'; // импорт карточек
-import {createCard, deleteCard, likeCard} from './scripts/card.js'; // импорт функций карточки
+import {createCard, deleteCard, likeCard, hideDeleteButton} from './scripts/card.js'; // импорт функций карточки
 import {clearValidation, enableValidation} from './scripts/validation.js';
 
 
@@ -31,11 +31,6 @@ const link = formPlace.elements.link; // инпут со ссылкой
 const popupImage = document.querySelector('.popup_type_image'); // попап с изображением
 const srcImage = popupImage.querySelector('.popup__image'); // изображение
 const captionImage = popupImage.querySelector('.popup__caption'); //описание изображения
-
-// установка изображения профиля
-//profileImage.style.backgroundImage = `url('${avatar}')`;
-
-
 
 // Анимация попапов
 popups.forEach(popup => {
@@ -128,16 +123,18 @@ forms.forEach(form => {
 
 //api
 
-import { getUserInfo, getCards, patchUserInfo, postCard } from './scripts/api.js'
+import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardApi} from './scripts/api.js'
 const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-5';
-const userToken = '123d08a2-0a99-4696-a359-e7de203515b4';
-const cardsUrl = `${baseUrl}/cards`
+export const userToken = '123d08a2-0a99-4696-a359-e7de203515b4';
+export const cardsUrl = `${baseUrl}/cards`
 const userUrl = `${baseUrl}/users/me`
 
 // функция заполнения карточек
-function loadCards(cardsData){
+function loadCards(userData, cardsData){
   cardsData.forEach((cardData) => {
-    placesList.append(createCard(cardData, deleteCard, likeCard, openCard));
+    const newCard = createCard(cardData, deleteCard, likeCard, openCard);
+    hideDeleteButton(userData, cardData, newCard);
+    placesList.append(newCard);
 });
 }
 
@@ -154,7 +151,7 @@ export function fillData(userData){
 Promise.all([getUserInfo(userUrl, userToken), getCards(cardsUrl, userToken)])
   .then(([userData, cardsData]) => {
     // Вывести дефолтные карточки на страницу
-    loadCards(cardsData);
+    loadCards(userData, cardsData);
     // Вывести дефолтные данные на страницу
     fillData(userData);
   });
