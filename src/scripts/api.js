@@ -121,7 +121,6 @@ export function dislikeCardApi(url, token, id) {
     })
       .then((res) => res.json())
       .then((result) => {
-          console.log(result)
         return result;
       })
       .catch((err) => {
