@@ -9,7 +9,6 @@ export function getUserInfo(url, token) {
   })
     .then((res) => res.json())
     .then((result) => {
-        console.log(result)
       return result;
     })
     .catch((err) => {
@@ -26,7 +25,6 @@ export function getCards(url, token) {
   })
     .then((res) => res.json())
     .then((result) => {
-        console.log(result)
       return result;
     })
     .catch((err) => {
@@ -86,6 +84,63 @@ export function deleteCardApi(url, token, id) {
     headers: {
       authorization: token,
     },
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
+    });
+}
+
+//лайк
+export function likeCardApi(url, token, id) {
+    return fetch(`${url}/${id}`, {
+      method: "PUT",
+      headers: {
+        authorization: token,
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        return result
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      });
+  }
+
+// дизлайк
+export function dislikeCardApi(url, token, id) {
+    return fetch(`${url}/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: token,
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+          console.log(result)
+        return result;
+      })
+      .catch((err) => {
+        console.log(`Ошибка: ${err}`);
+      });
+  }
+
+
+  //изменение аватара
+export function patchAvatar(url, token, avatar) {
+  return fetch(url, {
+    method: "PATCH",
+    headers: {
+      authorization: token,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      avatar: avatar,
+    }),
   })
     .then((res) => res.json())
     .then((result) => {

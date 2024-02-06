@@ -40,7 +40,8 @@ const toggleSaveButton = (inputList, buttonElement) => {
     } else {
         buttonElement.classList.remove('popup__button_disabled');
     }};
-  
+
+// Функция для проверки валидности каждого поля
     const hasInvalidInput = (inputList) => {
       return !inputList.every((inputElement) => {
         return checkInputValidity(inputElement.parentElement, inputElement);
@@ -51,8 +52,6 @@ const toggleSaveButton = (inputList, buttonElement) => {
 const setEventListeners = (formElement) => {
   const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
   const buttonElement = formElement.querySelector('.popup__button');
-  //toggleSaveButton(inputList, buttonElement);
-
   inputList.forEach((inputElement) => {
     inputElement.addEventListener('input', function () {
     checkInputValidity(formElement, inputElement);
@@ -96,10 +95,7 @@ function disableButton(formElement) {
 }
 // Функция для очистки ошибок
 export function clearValidation(formElement) {
-  // Очистить содержимое ошибок
-  clearInputText(formElement)
-  // Удалить оформление ошибки с каждого элемента ввода
-  clearErrorStyle(formElement)
-  // Деактивировать кнопку сохранения
-  disableButton(formElement)
+  clearInputText(formElement);
+  clearErrorStyle(formElement);
+  disableButton(formElement);
 }

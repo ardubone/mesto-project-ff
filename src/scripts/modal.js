@@ -1,5 +1,3 @@
-
-
 // открытие попапа
 export const openModal = (popup) => {
 //проверка на открытие
