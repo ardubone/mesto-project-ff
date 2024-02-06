@@ -1,43 +1,44 @@
-import { fillData } from "../index.js";
+const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-5';
+const userToken = '123d08a2-0a99-4696-a359-e7de203515b4';
+const cardsUrl = `${baseUrl}/cards`
+const likeUrl = `${baseUrl}/cards/likes/`
+const urlAvatar = `${baseUrl}/users/me/avatar/`
+const userUrl = `${baseUrl}/users/me`
+const checkResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  } else {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  }
+
 
 // гетаем карточки
-export function getUserInfo(url, token) {
-  return fetch(url, {
+export function getUserInfo() {
+  return fetch(userUrl, {
     headers: {
-      authorization: token,
+      authorization: userToken,
     },
   })
-    .then((res) => res.json())
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }
 
 // гетаем юзер инфо
-export function getCards(url, token) {
-  return fetch(url, {
+export function getCards() {
+  return fetch(cardsUrl, {
     headers: {
-      authorization: token,
+      authorization: userToken,
     },
   })
-    .then((res) => res.json())
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }
 
 // отправляем новые данные
-export function patchUserInfo(url, token, name, about) {
-  return fetch(url, {
+export function patchUserInfo(name, about) {
+  return fetch(userUrl, {
     method: "PATCH",
     headers: {
-      authorization: token,
+      authorization: userToken,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -45,22 +46,15 @@ export function patchUserInfo(url, token, name, about) {
       about: about,
     }),
   })
-    .then((res) => res.json())
-    .then((result) => {
-      fillData(result);
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }
 
 //новая карточка
-export function postCard(url, token, name, link) {
-  return fetch(url, {
+export function postCard(name, link) {
+  return fetch(cardsUrl, {
     method: "POST",
     headers: {
-      authorization: token,
+      authorization: userToken,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
@@ -68,85 +62,53 @@ export function postCard(url, token, name, link) {
       link: link,
     }),
   })
-    .then((res) => res.json())
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }
 
 // удаление карточки
-export function deleteCardApi(url, token, id) {
-  return fetch(`${url}/${id}`, {
+export function deleteCardApi(id) {
+  return fetch(`${cardsUrl}/${id}`, {
     method: "DELETE",
     headers: {
-      authorization: token,
+      authorization: userToken,
     },
   })
-    .then((res) => res.json())
-    .then((result) => {
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }
 
 //лайк
-export function likeCardApi(url, token, id) {
-    return fetch(`${url}/${id}`, {
+export function likeCardApi(id) {
+    return fetch(`${likeUrl}/${id}`, {
       method: "PUT",
       headers: {
-        authorization: token,
+        authorization: userToken,
       },
     })
-      .then((res) => res.json())
-      .then((result) => {
-        return result
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      });
+      .then(checkResponse)
   }
 
 // дизлайк
-export function dislikeCardApi(url, token, id) {
-    return fetch(`${url}/${id}`, {
+export function dislikeCardApi(id) {
+    return fetch(`${likeUrl}/${id}`, {
       method: "DELETE",
       headers: {
-        authorization: token,
+        authorization: userToken,
       },
     })
-      .then((res) => res.json())
-      .then((result) => {
-        return result;
-      })
-      .catch((err) => {
-        console.log(`Ошибка: ${err}`);
-      });
+      .then(checkResponse)
   }
 
-
   //изменение аватара
-export function patchAvatar(url, token, avatar) {
-  return fetch(url, {
+export function patchAvatar(avatar) {
+  return fetch(urlAvatar, {
     method: "PATCH",
     headers: {
-      authorization: token,
+      authorization: userToken,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       avatar: avatar,
     }),
   })
-    .then((res) => res.json())
-    .then((result) => {
-        console.log(result)
-      return result;
-    })
-    .catch((err) => {
-      console.log(`Ошибка: ${err}`);
-    });
+    .then(checkResponse)
 }

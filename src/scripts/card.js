@@ -1,5 +1,4 @@
 import {deleteCardApi, likeCardApi, dislikeCardApi} from "./api.js";
-import { userToken, cardsUrl, likeUrl} from "../index.js";
 // Функция создания карточки
 export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     // Темплейт карточки
@@ -30,14 +29,14 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
         .addEventListener("click", () => {
           if (!cardLikeButton.classList.contains("card__like-button_is-active")) {
         likeCard(cardData);
-        likeCardApi(likeUrl, userToken, cardData._id)
+        likeCardApi(cardData._id)
         .then((res) => {
             cardLikes.textContent = res.likes.length;
         })
       }
         else {
           likeCard(cardData);
-          dislikeCardApi(likeUrl, userToken, cardData._id)
+          dislikeCardApi(cardData._id)
           .then((res) => {
             cardLikes.textContent = res.likes.length;
         })

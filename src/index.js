@@ -36,12 +36,6 @@ const captionImage = popupImage.querySelector('.popup__caption'); //описан
 
 //api переменные
 import { getUserInfo, getCards, patchUserInfo, postCard, deleteCardApi, patchAvatar} from './scripts/api.js'
-const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-5';
-export const userToken = '123d08a2-0a99-4696-a359-e7de203515b4';
-export const cardsUrl = `${baseUrl}/cards`
-export const likeUrl = `${baseUrl}/cards/likes/`
-export const urlAvatar = `${baseUrl}/users/me/avatar/`
-const userUrl = `${baseUrl}/users/me`
 
 // Анимация попапов
 popups.forEach(popup => {
@@ -65,16 +59,9 @@ function fillPopupEdit() {
   description.value = profileDescription.textContent;
 } 
 
-// заполнение формы аватара значениями из DOM
-function fillAvatarEdit() {
-  const imageUrl = profileImage.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/)[1];
-  avatar.value = imageUrl;
-}
-
 // Нажатие на аватар
 profileImage.addEventListener('click', () => {
   openModal(avatarPopup);
-  fillAvatarEdit();
 });
 
 // Нажатие на редактирование профиля
@@ -113,7 +100,8 @@ function handleFormEditSubmit(evt) {
     profileTitle.textContent = title.value;
     profileDescription.textContent = description.value;
     closeModal(editPopup); // закрытие окна
-    patchUserInfo(userUrl, userToken, title.value, description.value)
+    patchUserInfo(title.value, description.value)
+    .then((data) => fillData(data))
 } 
 
 // Работа с формой аватара
@@ -123,7 +111,7 @@ function handleFormAvatarSubmit(evt) {
   avatar = formAvatar.elements.avatar.value;
   profileImage.style.backgroundImage = `url('${avatar}')`;
   closeModal(avatarPopup); // закрытие окна
-  patchAvatar(urlAvatar, userToken, avatar)
+  patchAvatar(avatar)
 } 
 
 // Прикрепляем обработчик к форме аватара на сабмит:
@@ -142,7 +130,7 @@ function handleFormSubmitPlace(evt) {
     };
     formPlace.reset(); // сбросить форму
     closeModal(addPopup) // закрытие окна
-    postCard(cardsUrl, userToken, newData.name, newData.link)
+    postCard(newData.name, newData.link)
     .then((result) => {
         placesList.prepend(createCard(result, deleteCard, likeCard, openCard));
     })
@@ -181,7 +169,7 @@ export function fillData(userData){
 
 //заполняем все данные при открытии страницы
 
-Promise.all([getUserInfo(userUrl, userToken), getCards(cardsUrl, userToken)])
+Promise.all([getUserInfo(), getCards()])
   .then(([userData, cardsData]) => {
     // Вывести дефолтные карточки на страницу
     loadCards(userData, cardsData);
