@@ -1,9 +1,10 @@
 import './pages/index.css'; // импорт главного файла стилей
-import avatar from './images/avatar.jpg';
+//import avatar from './images/avatar.jpg';
 import {closeModal, openModal} from './scripts/modal.js'; //импорт функции открытия и закрытия попапа
-import {initialCards} from './scripts/cards.js'; // импорт карточек
+//import {initialCards} from './scripts/cards.js'; // импорт карточек
 import {createCard, deleteCard, likeCard} from './scripts/card.js'; // импорт функций карточки
-import {enableValidation} from './scripts/validation.js';
+import {clearValidation, enableValidation} from './scripts/validation.js';
+
 
 // Все элементы в DOM
 const profileImage = document.querySelector('.profile__image'); // Изображение профиля
@@ -32,12 +33,9 @@ const srcImage = popupImage.querySelector('.popup__image'); // изображе�
 const captionImage = popupImage.querySelector('.popup__caption'); //описание изображения
 
 // установка изображения профиля
-profileImage.style.backgroundImage = `url('${avatar}')`;
+//profileImage.style.backgroundImage = `url('${avatar}')`;
 
-// Вывести дефолтные карточки на страницу
-initialCards.forEach((cardData) => {
-  placesList.append(createCard(cardData, deleteCard, likeCard, openCard));
-});
+
 
 // Анимация попапов
 popups.forEach(popup => {
@@ -97,6 +95,7 @@ function handleFormEditSubmit(evt) {
     profileTitle.textContent = title.value;
     profileDescription.textContent = description.value;
     closeModal(editPopup); // закрытие окна
+    patchUserInfo(userUrl, userToken, title.value, description.value)
 } 
 
 // Прикрепляем обработчик к форме профиля на сабмит:
@@ -113,9 +112,49 @@ function handleFormSubmitPlace(evt) {
     placesList.prepend(createCard(newData, deleteCard, likeCard, openCard)); // добавляем карточку в начало списка
     formPlace.reset(); // сбросить форму
     closeModal(addPopup) // закрытие окна
+    postCard(cardsUrl, userToken, newData.name, newData.link)
 }
 
 // Прикрепляем обработчик к форме дообавления карточки на сабмит:
 formPlace.addEventListener('submit', handleFormSubmitPlace);
 
+
 enableValidation()
+
+const forms = document.querySelectorAll('form');
+forms.forEach(form => {
+  clearValidation(form)
+})
+
+//api
+
+import { getUserInfo, getCards, patchUserInfo, postCard } from './scripts/api.js'
+const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-5';
+const userToken = '123d08a2-0a99-4696-a359-e7de203515b4';
+const cardsUrl = `${baseUrl}/cards`
+const userUrl = `${baseUrl}/users/me`
+
+// функция заполнения карточек
+function loadCards(cardsData){
+  cardsData.forEach((cardData) => {
+    placesList.append(createCard(cardData, deleteCard, likeCard, openCard));
+});
+}
+
+// функция заполнения данными
+export function fillData(userData){
+  profileDescription.textContent = userData.about;
+  profileTitle.textContent = userData.name;
+  profileImage.style.backgroundImage = `url('${userData.avatar}')`;
+}
+
+//получаем все лайки карточек
+
+
+Promise.all([getUserInfo(userUrl, userToken), getCards(cardsUrl, userToken)])
+  .then(([userData, cardsData]) => {
+    // Вывести дефолтные карточки на страницу
+    loadCards(cardsData);
+    // Вывести дефолтные данные на страницу
+    fillData(userData);
+  });

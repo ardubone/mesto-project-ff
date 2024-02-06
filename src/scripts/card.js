@@ -8,10 +8,12 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     const cardTitle = cardElement.querySelector(".card__title");
     const cardDeleteButton = cardElement.querySelector(".card__delete-button");
     const cardLikeButton = cardElement.querySelector(".card__like-button");
+    const cardLikes = cardElement.querySelector(".card__like-counter");
     //присваиваем значения
     cardImage.src = cardData.link;
     cardTitle.textContent = cardData.name;
     cardImage.alt = cardData.name;
+    cardLikes.textContent = Object.keys(cardData.likes).length;
     // колбэк удаления карточки
     cardDeleteButton
         .addEventListener("click", () => {

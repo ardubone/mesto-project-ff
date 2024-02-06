@@ -1,4 +1,4 @@
-import { clearValidation } from './validation.js';
+
 
 // открытие попапа
 export const openModal = (popup) => {
@@ -9,7 +9,6 @@ export const openModal = (popup) => {
 
     // лисенер на esc
     document.addEventListener('keydown', closeEsc);
-    clearValidation(popup);
 }
 
 //закрытие попапа
