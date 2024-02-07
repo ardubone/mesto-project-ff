@@ -13,7 +13,7 @@
 .popup__input_type_error,
 .popup__input:invalid {
   border-bottom-color: red;
-} 
+}
 
 .popup__error-text {
   font-size: 12px;

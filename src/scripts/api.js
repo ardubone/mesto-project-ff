@@ -4,6 +4,8 @@ const cardsUrl = `${baseUrl}/cards`
 const likeUrl = `${baseUrl}/cards/likes/`
 const urlAvatar = `${baseUrl}/users/me/avatar/`
 const userUrl = `${baseUrl}/users/me`
+
+// проверка ответа
 const checkResponse = (res) => {
   if (res.ok) {
     return res.json();

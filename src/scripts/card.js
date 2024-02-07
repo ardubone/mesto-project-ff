@@ -1,10 +1,14 @@
 import {deleteCardApi, likeCardApi, dislikeCardApi} from "./api.js";
-// Функция создания карточки
-export const createCard = (cardData, deleteCard, likeCard, openCard) => {
     // Темплейт карточки
-    const cardTemplate = document.querySelector("#card-template").content;
+const cardTemplate = document.querySelector("#card-template").content;
+// Функция клонирования
+const getCardTemplate = () => {
+  return cardTemplate.querySelector(".card").cloneNode(true);
+};
+// Функция создания карточки
+export const createCard = (cardData, userData, openCard) => {
     // DOM узлы
-    const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+    const cardElement = getCardTemplate();
     const cardImage = cardElement.querySelector(".card__image");
     const cardTitle = cardElement.querySelector(".card__title");
     const cardDeleteButton = cardElement.querySelector(".card__delete-button");
@@ -42,6 +46,10 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
         })
         }
     });
+//удаление кнопки удаления
+  hideDeleteButton(userData, cardData, cardDeleteButton);
+//  заполнение лайками
+  fillLikes(cardData, userData, cardLikeButton)
 
   // колбэк открытия карточки
   cardImage
@@ -54,21 +62,21 @@ export const createCard = (cardData, deleteCard, likeCard, openCard) => {
   }
 
   // Функция удаления карточки
-export const deleteCard = (cardData) => {
+const deleteCard = (cardData) => {
     cardData.element.remove();
     //deleteCardApi(cardsUrl, userToken, cardData._id);
 
   }
 
   // Функция like карточки
-export const likeCard = (cardData) => {
+const likeCard = (cardData) => {
     cardData.element.querySelector(".card__like-button").classList.toggle("card__like-button_is-active");
   }
 
   // Функция проверки наличия удаления карточки
-export const hideDeleteButton = (userData, cardData, newCard) => {
+const hideDeleteButton = (userData, cardData, cardDeleteButton) => {
     if (userData._id !== cardData.owner._id) {
-      newCard.querySelector('.card__delete-button').remove();
+      cardDeleteButton.remove();
     }
   }
 
@@ -78,8 +86,8 @@ function isLiked(cardData, userData) {
 }
 
 // функция заполнения лайками
-export function fillLikes(cardData, userData) {
+function fillLikes(cardData, userData, cardLikeButton) {
   if (isLiked(cardData, userData)) {
-    cardData.element.querySelector(".card__like-button").classList.add("card__like-button_is-active"); 
+    cardLikeButton.classList.add("card__like-button_is-active"); 
   }
 }

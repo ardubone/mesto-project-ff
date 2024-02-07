@@ -82,16 +82,17 @@ function clearInputText(formElement) {
 
 // функция очистки стилей ошибки
 function clearErrorStyle(formElement) {
-  const inputElements = formElement.querySelectorAll('.popup__input_type_error');
+  const inputElements = formElement.querySelectorAll('.popup__input');
   inputElements.forEach(inputElement => {
-    inputElement.classList.remove('popup__input_type_error');
+    inputElement.classList.remove('.popup__input:invalid');
+    inputElement.classList.remove('.popup__input_type_error');
   });
 }
 
 // деактивация кнопки
 function disableButton(formElement) {
   const buttonElement = formElement.querySelector('.popup__button');
-  buttonElement.classList.add('popup__button_disabled');
+  buttonElement.classList.remove('popup__button_disabled');
 }
 // Функция для очистки ошибок
 export function clearValidation(formElement) {
