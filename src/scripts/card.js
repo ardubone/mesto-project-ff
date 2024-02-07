@@ -64,7 +64,7 @@ export const createCard = (cardData, userData, openCard) => {
   // Функция удаления карточки
 const deleteCard = (cardData) => {
     cardData.element.remove();
-    //deleteCardApi(cardsUrl, userToken, cardData._id);
+    //deleteCardApi(cardData._id);
 
   }
 

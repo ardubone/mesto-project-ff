@@ -22,6 +22,8 @@ const description = formEdit.elements.description; //инпут работы
 
 const popups = document.querySelectorAll(".popup"); //находим все попапы
 
+const button = document.querySelector('button[type="submit"]'); //кнопка сохранения
+
 const profileTitle = document.querySelector(".profile__title"); // имя в DOM
 const profileDescription = document.querySelector(".profile__description"); // работа в DOM
 
@@ -33,13 +35,22 @@ const popupImage = document.querySelector(".popup_type_image"); // попап с
 const srcImage = popupImage.querySelector(".popup__image"); // изображение
 const captionImage = popupImage.querySelector(".popup__caption"); //описание изображения
 
+const validationConfig = {
+  inputErrorClass: '.popup__input_type_error',
+  popupButtonDisabled: 'popup__button_disabled',
+  popupInput:'.popup__input',
+  popupButton:'.popup__button',
+  popupForm: '.popup',
+  popupInputInvalid: '.popup__input:invalid',
+  popupErrortext: '.popup__error-text'
+}
+
 //api переменные
 import {
   getUserInfo,
   getCards,
   patchUserInfo,
   postCard,
-  deleteCardApi,
   patchAvatar,
 } from "./scripts/api.js";
 
@@ -83,20 +94,20 @@ function fillPopupEdit() {
 // Нажатие на аватар
 profileImage.addEventListener("click", () => {
   openModal(avatarPopup);
-  clearValidation(avatarPopup);
+  clearValidation(avatarPopup, validationConfig);
 });
 
 // Нажатие на редактирование профиля
 editButton.addEventListener("click", () => {
   openModal(editPopup);
   fillPopupEdit();
-  clearValidation(editPopup);
+  clearValidation(editPopup, validationConfig);
 });
 
 // Нажатие на кнопку добавления карточки
 addButton.addEventListener("click", () => {
   openModal(addPopup);
-  clearValidation(addPopup);
+  clearValidation(addPopup, validationConfig);
 });
 
 // Закрытие попапа
@@ -138,6 +149,7 @@ function handleFormEditSubmit(evt) {
 // Работа с формой аватара
 function handleFormAvatarSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
+  showLoading(true);
   avatar = formAvatar.elements.avatar.value;
   patchAvatar(avatar)
     .then(() => {
@@ -147,7 +159,10 @@ function handleFormAvatarSubmit(evt) {
     })
     .catch((error) => {
       errorLog(error)
-    });
+    })
+    .finally(() => {
+      showLoading(false);
+    })
 }
 
 // Прикрепляем обработчик к форме аватара на сабмит:
@@ -159,6 +174,7 @@ formEdit.addEventListener("submit", handleFormEditSubmit);
 // Работа с формой добавления карточки
 function handleFormSubmitPlace(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
+  showLoading(true);
   // передаем значения в карточку
   const newData = {
     name: place.value,
@@ -172,14 +188,18 @@ function handleFormSubmitPlace(evt) {
     })
     .catch((error) => {
       errorLog(error)
-    });
+    })
+    .finally(() => {
+      showLoading(false);
+    })
 }
 
 // Прикрепляем обработчик к форме дообавления карточки на сабмит:
 formPlace.addEventListener("submit", handleFormSubmitPlace);
 
+
 //включение валидации на все формы
-enableValidation();
+enableValidation(validationConfig);
 
 //апи функции
 
