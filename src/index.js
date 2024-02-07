@@ -162,7 +162,7 @@ function handleFormDeleteSubmit(evt) {
       closeModal(popupDelete);
     })
     .catch((error) => {
-      console.error(error); // Или errorLog(error)
+      errorLog(error)
     });
 }
 
