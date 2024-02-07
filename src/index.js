@@ -1,6 +1,6 @@
 import "./pages/index.css"; // импорт главного файла стилей
 import { closeModal, openModal } from "./scripts/modal.js"; //импорт функции открытия и закрытия попапа
-import { createCard} from "./scripts/card.js"; // импорт функций карточки
+import { createCard, currentCardData, deleteCard} from "./scripts/card.js"; // импорт функций карточки
 import { clearValidation, enableValidation } from "./scripts/validation.js";
 
 // Все элементы в DOM
@@ -15,6 +15,9 @@ const closeButtons = document.querySelectorAll(".popup__close"); //находи�
 const avatarPopup = document.querySelector(".popup_type_avatar"); // попап смены аватара
 const formAvatar = document.forms.edit_avatar; // форма смены аватара
 let avatar = formAvatar.elements.avatar; // инпут с аватаром
+
+export const popupDelete = document.querySelector(".popup_type_delete"); // попап удаления
+export const formDelete = document.forms.delete; // форма удаления
 
 const formEdit = document.forms.edit_profile; // форма в DOM
 const title = formEdit.elements.name; //инпут имени
@@ -51,10 +54,11 @@ import {
   patchUserInfo,
   postCard,
   patchAvatar,
+  deleteCardApi,
 } from "./scripts/api.js";
 
 //показ ошибки
-function errorLog(message) {
+export function errorLog(message) {
   console.error("Ошибка:", message);
 }
 
@@ -95,6 +99,8 @@ profileImage.addEventListener("click", () => {
   openModal(avatarPopup);
   clearValidation(avatarPopup, validationConfig);
 });
+
+
 
 // Нажатие на редактирование профиля
 editButton.addEventListener("click", () => {
@@ -144,6 +150,24 @@ function handleFormEditSubmit(evt) {
       showLoading(false);
     })
 }
+
+// Работа с формой удаления карточки
+function handleFormDeleteSubmit(evt) {
+  evt.preventDefault(); // отменяем стандартную отправку формы.
+  // Используем `currentCardData`, сохраненную при открытии формы
+  const cardId = currentCardData._id;
+  deleteCardApi(cardId)
+    .then(() => {
+      deleteCard(currentCardData); // Удаляем карточку из DOM
+      closeModal(popupDelete);
+    })
+    .catch((error) => {
+      console.error(error); // Или errorLog(error)
+    });
+}
+
+formDelete.addEventListener("submit", handleFormDeleteSubmit);
+//
 
 // Работа с формой аватара
 function handleFormAvatarSubmit(evt) {

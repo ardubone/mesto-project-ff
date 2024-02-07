@@ -1,4 +1,7 @@
 import {deleteCardApi, likeCardApi, dislikeCardApi} from "./api.js";
+import { errorLog, popupDelete } from "../index.js";
+import { openModal } from "./modal.js";
+export let currentCardData ;
     // Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
 // Функция клонирования
@@ -25,7 +28,9 @@ export const createCard = (cardData, userData, openCard) => {
     // колбэк удаления карточки
     cardDeleteButton
         .addEventListener("click", () => {
-        deleteCard(cardData);
+          currentCardData = cardData;
+          openModal(popupDelete);
+          //deleteCard(cardData);
         });
 
     // колбэк лайка
@@ -37,12 +42,18 @@ export const createCard = (cardData, userData, openCard) => {
         .then((res) => {
             cardLikes.textContent = res.likes.length;
         })
+        .catch((err) => {
+            errorLog(err);
+        })
       }
         else {
           likeCard(cardData);
           dislikeCardApi(cardData._id)
           .then((res) => {
             cardLikes.textContent = res.likes.length;
+        })
+        .catch((err) => {
+            errorLog(err);
         })
         }
     });
@@ -62,10 +73,9 @@ export const createCard = (cardData, userData, openCard) => {
   }
 
   // Функция удаления карточки
-const deleteCard = (cardData) => {
+export const deleteCard = (cardData) => {
     cardData.element.remove();
     //deleteCardApi(cardData._id);
-
   }
 
   // Функция like карточки
