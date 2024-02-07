@@ -17,7 +17,7 @@ const formAvatar = document.forms.edit_avatar; // форма смены ават
 let avatar = formAvatar.elements.avatar; // инпут с аватаром
 
 export const popupDelete = document.querySelector(".popup_type_delete"); // попап удаления
-export const formDelete = document.forms.delete; // форма удаления
+const formDelete = document.forms.delete; // форма удаления
 
 const formEdit = document.forms.edit_profile; // форма в DOM
 const title = formEdit.elements.name; //инпут имени
@@ -178,6 +178,7 @@ function handleFormAvatarSubmit(evt) {
     .then(() => {
       // передаем значения в аватар
       profileImage.style.backgroundImage = `url('${avatar}')`;
+      formAvatar.reset();
       closeModal(avatarPopup); // закрытие окна
     })
     .catch((error) => {
@@ -205,7 +206,7 @@ function handleFormSubmitPlace(evt) {
   };
   postCard(newData.name, newData.link)
     .then((result) => {
-      placesList.prepend(createCard(result, openCard));
+      placesList.prepend(createCard(result, result.owner, openCard));
       formPlace.reset(); // сбросить форму
       closeModal(addPopup); // закрытие окна
     })

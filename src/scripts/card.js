@@ -1,4 +1,4 @@
-import {deleteCardApi, likeCardApi, dislikeCardApi} from "./api.js";
+import {likeCardApi, dislikeCardApi} from "./api.js";
 import { errorLog, popupDelete } from "../index.js";
 import { openModal } from "./modal.js";
 export let currentCardData ;
@@ -30,7 +30,6 @@ export const createCard = (cardData, userData, openCard) => {
         .addEventListener("click", () => {
           currentCardData = cardData;
           openModal(popupDelete);
-          //deleteCard(cardData);
         });
 
     // колбэк лайка
@@ -75,7 +74,6 @@ export const createCard = (cardData, userData, openCard) => {
   // Функция удаления карточки
 export const deleteCard = (cardData) => {
     cardData.element.remove();
-    //deleteCardApi(cardData._id);
   }
 
   // Функция like карточки
