@@ -36,12 +36,11 @@ const srcImage = popupImage.querySelector(".popup__image"); // изображе�
 const captionImage = popupImage.querySelector(".popup__caption"); //описание изображения
 
 const validationConfig = {
-  inputErrorClass: '.popup__input_type_error',
+  inputErrorClass: 'popup__input_type_error',
   popupButtonDisabled: 'popup__button_disabled',
   popupInput:'.popup__input',
   popupButton:'.popup__button',
   popupForm: '.popup',
-  popupInputInvalid: '.popup__input:invalid',
   popupErrortext: '.popup__error-text'
 }
 

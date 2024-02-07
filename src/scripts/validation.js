@@ -79,23 +79,6 @@ export const enableValidation = (config) => {
   });
 };
 
-// функция очистки текста под инпутом
-function clearInputText(formElement, config) {
-  const errorElements = formElement.querySelectorAll(config.popupErrortext);
-  errorElements.forEach(errorElement => {
-    errorElement.textContent = '';
-  });
-}
-
-// функция очистки стилей ошибки
-function clearErrorStyle(formElement, config) {
-  const inputElements = formElement.querySelectorAll(config.popupInput);
-  inputElements.forEach(inputElement => {
-    inputElement.classList.remove(config.popupInputInvalid);
-    inputElement.classList.remove(config.inputErrorClass);
-  });
-}
-
 // деактивация кнопки
 function disableButton(formElement, config) {
   const buttonElement = formElement.querySelector(config.popupButton);
@@ -103,7 +86,9 @@ function disableButton(formElement, config) {
 }
 // Функция для очистки ошибок
 export function clearValidation(formElement, config) {
-  clearInputText(formElement,config);
-  clearErrorStyle(formElement, config);
+  const inputElements = formElement.querySelectorAll(config.popupInput);
+  inputElements.forEach(inputElement => {
+    hideInputError(formElement, inputElement, config);
+  })
   disableButton(formElement, config);
 }
