@@ -82,7 +82,7 @@ export const enableValidation = (config) => {
 // деактивация кнопки
 function disableButton(formElement, config) {
   const buttonElement = formElement.querySelector(config.popupButton);
-  buttonElement.classList.remove(config.popupButtonDisabled);
+  buttonElement.classList.add(config.popupButtonDisabled);
 }
 // Функция для очистки ошибок
 export function clearValidation(formElement, config) {

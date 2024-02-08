@@ -25,7 +25,9 @@ const description = formEdit.elements.description; //инпут работы
 
 const popups = document.querySelectorAll(".popup"); //находим все попапы
 
-const button = document.querySelector('button[type="submit"]'); //кнопка сохранения
+//const button = document.querySelector('button[type="submit"]'); //кнопка сохранения
+//const button = this.querySelector('.popup__button')
+//
 
 const profileTitle = document.querySelector(".profile__title"); // имя в DOM
 const profileDescription = document.querySelector(".profile__description"); // работа в DOM
@@ -63,7 +65,8 @@ export function errorLog(message) {
 }
 
 //лоадинг сохранить
-function showLoading(isLoading) {
+function showLoading(isLoading, popup) {
+const button = popup.querySelector(".popup__button");
   if(isLoading) {
     button.textContent = "Сохранение...";
   }
@@ -135,7 +138,7 @@ popups.forEach((popup) => {
 // Работа с формой редактирования
 function handleFormEditSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
-  showLoading(true);
+  showLoading(true, editPopup);
   patchUserInfo(title.value, description.value)
     .then((data) => {
       fillData(data);
@@ -147,7 +150,7 @@ function handleFormEditSubmit(evt) {
       errorLog(error)
     })
     .finally(() => {
-      showLoading(false);
+      showLoading(false, editPopup);
     })
 }
 
@@ -172,7 +175,7 @@ formDelete.addEventListener("submit", handleFormDeleteSubmit);
 // Работа с формой аватара
 function handleFormAvatarSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
-  showLoading(true);
+  showLoading(true, avatarPopup);
   avatar = formAvatar.elements.avatar.value;
   patchAvatar(avatar)
     .then(() => {
@@ -185,7 +188,7 @@ function handleFormAvatarSubmit(evt) {
       errorLog(error)
     })
     .finally(() => {
-      showLoading(false);
+      showLoading(false, avatarPopup);
     })
 }
 
@@ -198,7 +201,7 @@ formEdit.addEventListener("submit", handleFormEditSubmit);
 // Работа с формой добавления карточки
 function handleFormSubmitPlace(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
-  showLoading(true);
+  showLoading(true, addPopup);
   // передаем значения в карточку
   const newData = {
     name: place.value,
@@ -214,7 +217,7 @@ function handleFormSubmitPlace(evt) {
       errorLog(error)
     })
     .finally(() => {
-      showLoading(false);
+      showLoading(false, addPopup);
     })
 }
 
