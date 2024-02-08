@@ -46,7 +46,7 @@ const validationConfig = {
   popupInput:'.popup__input',
   popupButton:'.popup__button',
   popupForm: '.popup',
-  popupErrortext: '.popup__error-text'
+  //popupErrortext: '.popup__error-text'
 }
 
 //api переменные
