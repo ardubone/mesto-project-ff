@@ -1,15 +1,17 @@
 import {likeCardApi, dislikeCardApi} from "./api.js";
-import { errorLog, popupDelete } from "../index.js";
-import { openModal } from "./modal.js";
+import {errorLog} from "./utils.js";
+import {openModal } from "./modal.js";
 export let currentCardData ;
+
     // Темплейт карточки
 const cardTemplate = document.querySelector("#card-template").content;
 // Функция клонирования
 const getCardTemplate = () => {
   return cardTemplate.querySelector(".card").cloneNode(true);
 };
+
 // Функция создания карточки
-export const createCard = (cardData, userData, openCard) => {
+export const createCard = (cardData, userData, openCard, modalDelete) => {
     // DOM узлы
     const cardElement = getCardTemplate();
     const cardImage = cardElement.querySelector(".card__image");
@@ -29,7 +31,7 @@ export const createCard = (cardData, userData, openCard) => {
     cardDeleteButton
         .addEventListener("click", () => {
           currentCardData = cardData;
-          openModal(popupDelete);
+          openModal(modalDelete);
         });
 
     // колбэк лайка
