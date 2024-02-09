@@ -1,6 +1,6 @@
 import "./pages/index.css"; // импорт главного файла стилей
 import { closeModal, openModal } from "./scripts/modal.js"; //импорт функции открытия и закрытия попапа
-import { createCard, currentCardData, deleteCard } from "./scripts/card.js"; // импорт функций карточки
+import { createCard, deleteCard, isLikedClass, likeCard } from "./scripts/card.js"; // импорт функций карточки
 import { clearValidation, enableValidation } from "./scripts/validation.js";
 import {
   getUserInfo,
@@ -9,6 +9,8 @@ import {
   postCard,
   patchAvatar,
   deleteCardApi,
+  likeCardApi,
+  dislikeCardApi
 } from "./scripts/api.js";
 import { errorLog, showLoading } from "./scripts/utils.js";
 
@@ -25,7 +27,6 @@ const avatarPopup = document.querySelector(".popup_type_avatar"); // попап 
 const formAvatar = document.forms.edit_avatar; // форма смены аватара
 let avatar = formAvatar.elements.avatar; // инпут с аватаром
 
-const popupDelete = document.querySelector(".popup_type_delete"); // попап удаления
 const formDelete = document.forms.delete; // форма удаления
 
 const formEdit = document.forms.edit_profile; // форма в DOM
@@ -131,23 +132,18 @@ function handleFormEditSubmit(evt) {
 }
 
 // Работа с формой удаления карточки
-function handleFormDeleteSubmit(evt) {
-  evt.preventDefault(); // отменяем стандартную отправку формы.
+function handleFormDeleteSubmit(data, modal) {
   // Используем `currentCardData`, сохраненную при открытии формы
-  const cardId = currentCardData._id;
+  const cardId = data._id;
   deleteCardApi(cardId)
     .then(() => {
-      deleteCard(currentCardData); // Удаляем карточку из DOM
-      closeModal(popupDelete);
+      deleteCard(data); // Удаляем карточку из DOM
+      closeModal(modal);
     })
     .catch((error) => {
       errorLog(error);
     });
 }
-
-formDelete.addEventListener("submit", handleFormDeleteSubmit);
-//
-
 // Работа с формой аватара
 function handleFormAvatarSubmit(evt) {
   evt.preventDefault(); // отменяем стандартную отправку формы.
@@ -168,6 +164,30 @@ function handleFormAvatarSubmit(evt) {
     });
 }
 
+// хэндлер лайков
+function likeCardHandler(data, dataLikes, buttonLike) {
+  if (!buttonLike.classList.contains(isLikedClass)) {
+    likeCard(buttonLike);
+    likeCardApi(data._id)
+    .then((res) => {
+      dataLikes.textContent = res.likes.length;
+    })
+    .catch((err) => {
+        errorLog(err);
+    })
+  }
+    else {
+      likeCard(buttonLike);
+      dislikeCardApi(data._id)
+      .then((res) => {
+        dataLikes.textContent = res.likes.length;
+    })
+    .catch((err) => {
+        errorLog(err);
+    })
+    }
+}
+
 // Прикрепляем обработчик к форме аватара на сабмит:
 formAvatar.addEventListener("submit", handleFormAvatarSubmit);
 
@@ -185,7 +205,7 @@ function handleFormSubmitPlace(evt) {
   };
   postCard(newData.name, newData.link)
     .then((result) => {
-      placesList.prepend(createCard(result, result.owner, openCard, popupDelete));
+      placesList.prepend(createCard(result, result.owner, openCard, handleFormDeleteSubmit, likeCardHandler));
       formPlace.reset(); // сбросить форму
       closeModal(addPopup); // закрытие окна
     })
@@ -208,7 +228,7 @@ enableValidation(validationConfig);
 // функция заполнения карточек
 function loadCards(userData, cardsData) {
   cardsData.forEach((cardData) => {
-    const newCard = createCard(cardData, userData, openCard, popupDelete);
+    const newCard = createCard(cardData, userData, openCard, handleFormDeleteSubmit, likeCardHandler);
     placesList.append(newCard);
   });
 }
